@@ -1,32 +1,32 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+このテンプレートは、Vite 上で React を HMR（ホットリロード）付きで動作させるための最小構成と、いくつかの ESLint ルールを提供します。
 
-Currently, two official plugins are available:
+現在、公式プラグインは次の 2 つです。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react): [Babel](https://babeljs.io/)（あるいは [rolldown-vite](https://vite.dev/guide/rolldown) 利用時は [oxc](https://oxc.rs)）で Fast Refresh を実現します。
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc): [SWC](https://swc.rs/) を利用した Fast Refresh 実装です。
 
-## API server (FastAPI)
+## API サーバー（FastAPI）
 
-An in-memory task API lives in `main.py/app`. It offers typical CRUD endpoints under `/tasks` plus a `/health` ping.
+`main.py/app` にインメモリのタスク API を用意しています。`/tasks` 以下に CRUD エンドポイントがあり、稼働状態確認用の `/health` も提供します。
 
-### Run the server
+### サーバーの起動方法
 
 ```powershell
 cd kennsyuuDay3
 .\venv\Scripts\python.exe .\main.py\app
 ```
 
-The script bootstraps Uvicorn on http://127.0.0.1:8000. When the server is running, the interactive Swagger UI is available at http://127.0.0.1:8000/docs.
+Uvicorn が http://127.0.0.1:8000 で立ち上がり、Swagger UI は http://127.0.0.1:8000/docs から利用できます。
 
-### Sample requests
+### リクエスト例
 
 ```powershell
-# List demo tasks
+# デモタスクを取得
 Invoke-WebRequest http://127.0.0.1:8000/tasks
 
-# Create a new task
+# タスクを新規作成
 Invoke-RestMethod `
   -Uri http://127.0.0.1:8000/tasks `
   -Method Post `
@@ -34,16 +34,16 @@ Invoke-RestMethod `
   -ContentType "application/json"
 ```
 
-Use the responses in your React app via `fetch`/`axios` as needed.
+レスポンスは React アプリから `fetch` や `axios` を通じて利用できます。
 
-## Frontend (React)
+## フロントエンド（React）
 
-`src/App.jsx` fetches the task list from the FastAPIサーバー（デフォルトは `http://127.0.0.1:8000`）と通信し、固定のデモデータを画面に並べます。
+`src/App.jsx` が FastAPI サーバー（デフォルトは `http://127.0.0.1:8000`）へアクセスし、固定のデモデータを一覧表示します。
 
 ### 実行手順
 
-1. 上記の手順で API サーバーを起動する。
-2. 別ターミナルで React を起動:
+1. まず上記の手順で API サーバーを起動。
+2. 別ターミナルで React 側を起動:
 
    ```powershell
    cd kennsyuuDay3
@@ -51,6 +51,6 @@ Use the responses in your React app via `fetch`/`axios` as needed.
    npm run dev
    ```
 
-3. ブラウザで表示された URL（通常は http://127.0.0.1:5173 ）へアクセス。
+3. ブラウザで Vite の URL（通常は http://127.0.0.1:5173 ）にアクセス。
 
-`VITE_API_BASE_URL` を `.env` などで定義すると API のベース URL を変更できます。指定がない場合は `http://127.0.0.1:8000` を利用します。
+`.env` などで `VITE_API_BASE_URL` を定義すると API のベース URL を変更できます。未設定の場合は `http://127.0.0.1:8000` を使用します。

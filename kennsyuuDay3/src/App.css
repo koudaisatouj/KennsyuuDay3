@@ -55,3 +55,9 @@
 .task-card small {
   color: #777;
 }
+
+.task-empty {
+  text-align: center;
+  color: #555;
+  font-weight: 500;
+}

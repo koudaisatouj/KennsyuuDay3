@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import TaskList from './components/TaskList'
+import StatusMessage from './components/StatusMessage'
 import './App.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'
@@ -47,28 +49,14 @@ function App() {
         </p>
       </header>
 
-      {loading && <p className="status">読み込み中...</p>}
+      {loading && <StatusMessage>読み込み中...</StatusMessage>}
       {error && (
-        <p className="status error">API 取得に失敗しました: {error}</p>
+        <StatusMessage variant="error">
+          API 取得に失敗しました: {error}
+        </StatusMessage>
       )}
 
-      {!loading && !error && (
-        <section className="task-list">
-          {tasks.length === 0 ? (
-            <p>表示できるタスクがありません。</p>
-          ) : (
-            tasks.map((task) => (
-              <article key={task.id} className="task-card">
-                <h2>
-                  {task.completed ? '✅' : '📝'} {task.title}
-                </h2>
-                <p>{task.description ?? '説明は登録されていません。'}</p>
-                <small>ID: {task.id}</small>
-              </article>
-            ))
-          )}
-        </section>
-      )}
+      {!loading && !error && <TaskList tasks={tasks} />}
     </main>
   )
 }
