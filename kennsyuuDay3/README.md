@@ -35,3 +35,22 @@ Invoke-RestMethod `
 ```
 
 Use the responses in your React app via `fetch`/`axios` as needed.
+
+## Frontend (React)
+
+`src/App.jsx` fetches the task list from the FastAPIサーバー（デフォルトは `http://127.0.0.1:8000`）と通信し、固定のデモデータを画面に並べます。
+
+### 実行手順
+
+1. 上記の手順で API サーバーを起動する。
+2. 別ターミナルで React を起動:
+
+   ```powershell
+   cd kennsyuuDay3
+   npm install   # 初回のみ
+   npm run dev
+   ```
+
+3. ブラウザで表示された URL（通常は http://127.0.0.1:5173 ）へアクセス。
+
+`VITE_API_BASE_URL` を `.env` などで定義すると API のベース URL を変更できます。指定がない場合は `http://127.0.0.1:8000` を利用します。

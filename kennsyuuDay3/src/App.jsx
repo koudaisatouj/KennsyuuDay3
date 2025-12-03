@@ -1,34 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://127.0.0.1:8000'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    async function loadTasks() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/tasks`, {
+          signal: controller.signal,
+        })
+
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setTasks(data)
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          setError(err.message ?? 'unknown error')
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadTasks()
+
+    return () => controller.abort()
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+    <main className="app">
+      <header>
+        <h1>研修 Day3 タスク一覧</h1>
+        <p>FastAPI から固定データを fetch して表示しています。</p>
+        <p className="api-url">
+          API: <code>{API_BASE_URL}/tasks</code>
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      </header>
+
+      {loading && <p className="status">読み込み中...</p>}
+      {error && (
+        <p className="status error">API 取得に失敗しました: {error}</p>
+      )}
+
+      {!loading && !error && (
+        <section className="task-list">
+          {tasks.length === 0 ? (
+            <p>表示できるタスクがありません。</p>
+          ) : (
+            tasks.map((task) => (
+              <article key={task.id} className="task-card">
+                <h2>
+                  {task.completed ? '✅' : '📝'} {task.title}
+                </h2>
+                <p>{task.description ?? '説明は登録されていません。'}</p>
+                <small>ID: {task.id}</small>
+              </article>
+            ))
+          )}
+        </section>
+      )}
+    </main>
   )
 }
 
